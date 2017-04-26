@@ -1,41 +1,42 @@
 <?php
 
-session_start();
-
-require_once "includes.php";
-require_once "repository/usuario-repository.php";
-require_once "model/usuario.php";
-
-$action = isset($_GET['action']) ? $_GET['action'] : (isset($_POST['action']) ? $_POST['action'] : "");
-
-if (!$action) {
-    ToErrorJson("Action needs to be defined");
-}
-
-switch ($action) {
-    case "get":
-        ActionGetThis();
-        break;
-    case "list":
-        ActionGetList();
-        break;
-    case "insert":
-        ActionInsert();
-        break;
-    case "update":
-        ActionUpdate();
-        break;
-    case "login":
-        ActionLogin();
-        break;
-    default:
-        ToErrorJson("Action not found");
-}
-
-function ActionGetThis()
+class UsuarioController extends BaseController
 {
-    try {
-        $codUsuario = $_GET['key'];
+    function ProcessRequest($action)
+    {
+        try {
+            switch ($action) {
+                case "get":
+                    $codUsuario = isset($_GET['key']) ? $_GET['key'] : null;
+                    $this->ActionGetThis($codUsuario);
+                    break;
+                case "list":
+                    $this->ActionGetList();
+                    break;
+                case "insert":
+                    $data = isset($_POST['data']) ? $_POST['data'] : null;
+                    $this->ActionInsert($data);
+                    break;
+                case "update":
+                    $data = isset($_POST['data']) ? $_POST['data'] : null;
+                    $this->ActionUpdate($data);
+                    break;
+                case "login":
+                    $data = isset($_POST['data']) ? $_POST['data'] : null;
+                    $this->ActionLogin($data);
+                    break;
+                default:
+                    ToErrorJson("Action not found");
+            }
+        } catch (Warning $e) {
+            ToErrorJson($e->getMessage());
+        } catch (Exception $e) {
+            ToExceptionJson($e);
+        }
+    }
+
+    function ActionGetThis($codUsuario)
+    {
         $usuarioRepository = new UsuarioRepository();
         $result = $usuarioRepository->GetThis($codUsuario);
 
@@ -46,16 +47,10 @@ function ActionGetThis()
             throw new Warning("Usuario não encontrado");
 
         ToWrappedJson($usuario);
-    } catch (Warning $e) {
-        ToErrorJson($e->getMessage());
-    } catch (Exception $e) {
-        ToExceptionJson($e);
     }
-}
 
-function ActionGetList()
-{
-    try {
+    function ActionGetList()
+    {
         $usuarioRepository = new UsuarioRepository();
         $result = $usuarioRepository->GetList();
 
@@ -68,18 +63,10 @@ function ActionGetList()
         }
 
         ToWrappedJson($listUsuario);
-    } catch (Warning $e) {
-        ToErrorJson($e->getMessage());
-    } catch (Exception $e) {
-        ToExceptionJson($e);
     }
-}
 
-function ActionInsert()
-{
-    try {
-        $data = isset($_POST['data']) ? $_POST['data'] : null;
-
+    function ActionInsert($data)
+    {
         if (!$data) {
             throw new Warning("Os dados enviados são inválidos");
         }
@@ -93,18 +80,10 @@ function ActionInsert()
         $usuarioRepository->Insert($usuario);
 
         ToWrappedJson($usuario, "Usuario inserido com sucesso");
-    } catch (Warning $e) {
-        ToErrorJson($e->getMessage());
-    } catch (Exception $e) {
-        ToExceptionJson($e);
     }
-}
 
-function ActionUpdate()
-{
-    try {
-        $data = isset($_POST['data']) ? $_POST['data'] : null;
-
+    function ActionUpdate($data)
+    {
         if (!$data) {
             throw new Warning("Os dados enviados são inválidos");
         }
@@ -118,18 +97,10 @@ function ActionUpdate()
         $usuarioRepository->Update($usuario);
 
         ToWrappedJson($usuario, "Dados atualizados com sucesso");
-    } catch (Warning $e) {
-        ToErrorJson($e->getMessage());
-    } catch (Exception $e) {
-        ToExceptionJson($e);
     }
-}
 
-function ActionLogin()
-{
-    try {
-        $data = isset($_POST['data']) ? $_POST['data'] : null;
-
+    function ActionLogin($data)
+    {
         if (!$data) {
             throw new Warning("Os dados enviados são inválidos");
         }
@@ -144,12 +115,7 @@ function ActionLogin()
 
         $_SESSION['cod_usuario'] = $usuario->codUsuario;
         $_SESSION['nome'] = $usuario->nome;
-        $_SESSION['perfil'] = $usuario->perfil;
 
         ToWrappedJson(null, "Usuário autenticado com sucesso");
-    } catch (Warning $e) {
-        ToErrorJson($e->getMessage());
-    } catch (Exception $e) {
-        ToExceptionJson($e);
     }
 }

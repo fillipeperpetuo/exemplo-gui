@@ -4,10 +4,12 @@ class Usuario
 {
     var $codUsuario;
     var $nome;
+    var $endereco;
     var $telefone;
     var $email;
+    var $login;
     var $senha;
-    var $perfil;
+    var $codPerfil;
 
     function FillByObject($obj)
     {
@@ -17,17 +19,23 @@ class Usuario
         if (property_exists($obj, 'nome'))
             $this->nome = $obj->nome;
 
+        if (property_exists($obj, 'endereco'))
+            $this->endereco = $obj->endereco;
+
         if (property_exists($obj, 'telefone'))
             $this->telefone = $obj->telefone;
 
         if (property_exists($obj, 'email'))
             $this->email = $obj->email;
 
+        if (property_exists($obj, 'login'))
+            $this->login = $obj->login;
+
         if (property_exists($obj, 'senha'))
             $this->senha = $obj->senha;
 
-        if (property_exists($obj, 'perfil'))
-            $this->perfil = $obj->perfil;
+        if (property_exists($obj, 'codPerfil'))
+            $this->codPerfil = $obj->codPerfil;
     }
 
     function FillByDB($dbArray)
@@ -38,13 +46,19 @@ class Usuario
         if (array_key_exists("nome", $dbArray))
             $this->nome = $dbArray['nome'];
 
+        if (array_key_exists("endereco", $dbArray))
+            $this->endereco = $dbArray['endereco'];
+
         if (array_key_exists("telefone", $dbArray))
             $this->telefone = $dbArray['telefone'];
 
         if (array_key_exists("email", $dbArray))
             $this->email = $dbArray['email'];
 
-        if (array_key_exists("perfil", $dbArray))
-            $this->perfil = $dbArray['perfil'];
+        if (array_key_exists("login", $dbArray))
+            $this->login = $dbArray['login'];
+
+        if (array_key_exists("codPerfil", $dbArray))
+            $this->codPerfil = $dbArray['codPerfil'];
     }
 }

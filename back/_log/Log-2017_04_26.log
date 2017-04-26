@@ -1,0 +1,11 @@
+[12:42:30 BRT] 	 [::1] 	 SQLSTATE[42S02]: Base table or view not found: 1146 Table 'newfitnessdb.tb_usuario' doesn't exist 
+[12:44:25 BRT] 	 [::1] 	 SQLSTATE[42S02]: Base table or view not found: 1146 Table 'newfitnessdb.tb_usuario' doesn't exist 
+[12:44:26 BRT] 	 [::1] 	 SQLSTATE[42S02]: Base table or view not found: 1146 Table 'newfitnessdb.tb_usuario' doesn't exist 
+[12:44:26 BRT] 	 [::1] 	 SQLSTATE[42S02]: Base table or view not found: 1146 Table 'newfitnessdb.tb_usuario' doesn't exist 
+[12:44:26 BRT] 	 [::1] 	 SQLSTATE[42S02]: Base table or view not found: 1146 Table 'newfitnessdb.tb_usuario' doesn't exist 
+[12:44:26 BRT] 	 [::1] 	 SQLSTATE[42S02]: Base table or view not found: 1146 Table 'newfitnessdb.tb_usuario' doesn't exist 
+[12:44:26 BRT] 	 [::1] 	 SQLSTATE[42S02]: Base table or view not found: 1146 Table 'newfitnessdb.tb_usuario' doesn't exist 
+[12:44:27 BRT] 	 [::1] 	 SQLSTATE[42S02]: Base table or view not found: 1146 Table 'newfitnessdb.tb_usuario' doesn't exist 
+[12:44:27 BRT] 	 [::1] 	 SQLSTATE[42S02]: Base table or view not found: 1146 Table 'newfitnessdb.tb_usuario' doesn't exist 
+[16:36:29 BRT] 	 [::1] 	 SQLSTATE[42S22]: Column not found: 1054 Unknown column 'perfil' in 'field list' 
+[16:36:33 BRT] 	 [::1] 	 SQLSTATE[42S22]: Column not found: 1054 Unknown column 'perfil' in 'field list' 

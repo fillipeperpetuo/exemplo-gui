@@ -9,7 +9,7 @@ class UsuarioRepository extends BaseRepository
     {
         $conn = $this->db->getConnection();
 
-        $sql = 'SELECT cod_usuario, nome, telefone, email, perfil FROM tb_usuario WHERE cod_usuario = :cod_usuario';
+        $sql = 'SELECT cod_usuario, nome, telefone, email FROM tb_usuario WHERE cod_usuario = :cod_usuario';
 
         $stm = $conn->prepare($sql);
         $stm->bindParam(':cod_usuario', $codUsuario);
@@ -23,7 +23,7 @@ class UsuarioRepository extends BaseRepository
     {
         $conn = $this->db->getConnection();
 
-        $sql = 'SELECT cod_usuario, nome, telefone, email, perfil FROM tb_usuario';
+        $sql = 'SELECT cod_usuario, nome, telefone, email FROM tb_usuario';
 
         $stm = $conn->prepare($sql);
         $stm->execute();
@@ -34,19 +34,21 @@ class UsuarioRepository extends BaseRepository
 
     function Insert(Usuario &$usuario)
     {
-        if (!$this->IsAvailableEmail($usuario->email))
-            throw new Warning("Email já cadastrado");
+        if (!$this->IsAvailableUser($usuario->login))
+            throw new Warning("Login já cadastrado");
 
         $conn = $this->db->getConnection();
 
-        $sql = 'INSERT INTO tb_usuario (nome, telefone, email, senha, perfil) VALUES (:nome, :telefone, :email, SHA1(:senha), :perfil)';
+        $sql = 'INSERT INTO tb_usuario (nome, endereco, telefone, email, login, senha, cod_perfil) VALUES (:nome, :endereco, :telefone, :email, :login, SHA1(:senha), :cod_perfil)';
 
         $stm = $conn->prepare($sql);
         $stm->bindParam(':nome', $usuario->nome);
+        $stm->bindParam(':endereco', $usuario->endereco);
         $stm->bindParam(':telefone', $usuario->telefone);
         $stm->bindParam(':email', $usuario->email);
+        $stm->bindParam(':login', $usuario->login);
         $stm->bindParam(':senha', $usuario->senha);
-        $stm->bindParam(':perfil', $usuario->perfil);
+        $stm->bindParam(':cod_perfil', $usuario->codPerfil);
         $stm->execute();
 
         $usuario->codUsuario = $conn->lastInsertId();
@@ -56,19 +58,19 @@ class UsuarioRepository extends BaseRepository
 
     function Update(Usuario &$usuario)
     {
-        if (!$this->IsAvailableEmail($usuario->email, $usuario->codUsuario))
-            throw new Warning("Email já cadastrado");
+        if (!$this->IsAvailableUser($usuario->login, $usuario->codUsuario))
+            throw new Warning("Login já cadastrado");
 
         $conn = $this->db->getConnection();
 
-        $sql = 'UPDATE tb_usuario SET nome = :nome, telefone = :telefone, email = :email, perfil = :perfil WHERE cod_usuario = :codUsuario';
+        //TODO: Complementar com os campos da tabela
+        $sql = 'UPDATE tb_usuario SET nome = :nome, telefone = :telefone, email = :email WHERE cod_usuario = :codUsuario';
 
         $stm = $conn->prepare($sql);
         $stm->bindParam(':codUsuario', $usuario->codUsuario);
         $stm->bindParam(':nome', $usuario->nome);
         $stm->bindParam(':telefone', $usuario->telefone);
         $stm->bindParam(':email', $usuario->email);
-        $stm->bindParam(':perfil', $usuario->perfil);
         $stm->execute();
 
         return $stm->rowCount() > 0;
@@ -78,10 +80,10 @@ class UsuarioRepository extends BaseRepository
     {
         $conn = $this->db->getConnection();
 
-        $sql = 'SELECT cod_usuario, nome, perfil FROM tb_usuario WHERE email = :email && senha = SHA1(:senha)';
+        $sql = 'SELECT cod_usuario, nome FROM tb_usuario WHERE login = :login && senha = SHA1(:senha)';
 
         $stm = $conn->prepare($sql);
-        $stm->bindParam(':email', $usuario->email);
+        $stm->bindParam(':email', $usuario->login);
         $stm->bindParam(':senha', $usuario->senha);
         $stm->execute();
 
@@ -95,17 +97,17 @@ class UsuarioRepository extends BaseRepository
         $usuario->senha = null;
     }
 
-    private function IsAvailableEmail($email, $codUsuario = null)
+    private function IsAvailableUser($login, $codUsuario = null)
     {
         $conn = $this->db->getConnection();
 
-        $sql = 'SELECT cod_usuario FROM tb_usuario WHERE email = :email';
+        $sql = 'SELECT cod_usuario FROM tb_usuario WHERE login = :login';
 
         if ($codUsuario)
             $sql .= ' AND cod_usuario <> :codUsuario';
 
         $stm = $conn->prepare($sql);
-        $stm->bindParam(':email', $email);
+        $stm->bindParam(':login', $login);
 
         if ($codUsuario)
             $stm->bindParam(':codUsuario', $codUsuario);
